@@ -6,21 +6,13 @@
   <title>MotoAI v13 Combo Test</title>
 </head>
 <body>
-  <h2>🧠 Demo MotoAI v13 Combo Standalone</h2>
-  <p>Thử gõ “Xe ga”, “Xe số”, “50cc”, “Thủ tục”, “Liên hệ” sau khi mở trợ lý 👇</p>
+  <h2>🧠 Test MotoAI v13 Combo Standalone</h2>
+  <p>Nhấn nút để mở trợ lý chat.</p>
 
-  <!-- Nhúng file AI -->
+  <!-- Nút mở AI thủ công -->
+  <button onclick="MotoAI_v10.open()">Mở MotoAI</button>
+
+  <!-- Nhúng file chính -->
   <script src="./motoai_v13_combo_standalone.js"></script>
-
-  <!-- Mở MotoAI tự động khi trang load -->
-  <script>
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        if (window.MotoAI_v10 && typeof MotoAI_v10.open === 'function') {
-          MotoAI_v10.open();
-        }
-      }, 800);
-    });
-  </script>
 </body>
 </html>
