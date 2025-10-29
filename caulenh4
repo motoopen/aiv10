@@ -1,0 +1,69 @@
+TITLE="[TITLE]"
+DESCRIPTION="[DESCRIPTION]"
+PHONE="[PHONE]"
+ZALO="[ZALO_URL]"   // "" nếu không có
+MAP="[MAP_URL]"     // "" nếu không có
+LOGO_URL="[LOGO_URL]" // URL logo (svg/png). "" nếu không có.
+
+# PRODUCT_ITEMS: mảng tối đa 12 items. Mỗi item là object JSON:
+# { "image":"https://...", "title":"Wave RS", "desc":"Xe sạch, chạy tốt", "price":"150000", "page":"banggia.html#wave" }
+# Nếu không muốn một trường nào thì cho rỗng.
+PRODUCT_ITEMS=[
+  {"image":"https://i.postimg.cc/xxx1.jpg","title":"Wave RS","desc":"Xe số, tiết kiệm","price":"150000","page":"banggia.html#wave"},
+  {"image":"https://i.postimg.cc/xxx2.jpg","title":"Vision","desc":"Xe ga tiện lợi","price":"200000","page":"banggia.html#vision"},
+  ...
+]
+
+Bạn là chuyên gia front-end UI/UX phong cách Apple. Hãy xuất **DUY NHẤT** một file hoàn chỉnh `index.html` (HTML + CSS + JS nội tuyến; JS cuối `</body>`; IIFE; không jQuery/Bootstrap). Dùng Inter + Material Symbols Rounded + Font Awesome 6. Không chèn văn bản ngoài file.
+
+**YÊU CẦU BỔ SUNG VỀ LOGO & PRODUCT GALLERY (bắt buộc)**
+
+1. Logo:
+- Nếu `LOGO_URL` không rỗng: hiển thị logo trong topbar (kích thước thích hợp, retina-ready nếu svg). Thêm `alt="${TITLE} logo"`. Logo cũng dùng làm favicon fallback nếu có.
+- Nếu `LOGO_URL` rỗng: hiển thị tên `TITLE` dưới dạng text styled.
+
+2. Product gallery (dựa trên PRODUCT_ITEMS):
+- Hiển thị 0..12 product cards (theo array). Nếu array rỗng thì render placeholder “Chưa có sản phẩm mẫu”.
+- Layout: responsive CSS Grid (desktop 4 cột, tablet 2–3 cột, mobile 1 cột).
+- Mỗi card gồm: ảnh (aspect ratio 4:3), title, short desc, price (định dạng VND) và nút “Xem”/“Liên hệ”.
+- Ảnh: hỗ trợ `srcset` và `sizes` (dựa trên same URL, but generate retina variant by appending `@2x` if URL pattern allows — nếu không, vẫn dùng `loading="lazy"`). Luôn set `alt` từ item.title.
+- Khi bấm ảnh: mở lightbox modal (simple, keyboard ESC để đóng, click backdrop để đóng). Lightbox hiển thị ảnh lớn + caption + CTA gọi/Zalo.
+- Tối ưu: lazy-load + `decoding="async"`.
+
+3. Structured Data:
+- Thêm JSON-LD `Product` list cho tối đa 5 products (include name, image, description, offers.price, offers.priceCurrency: "VND", url: page).
+
+4. Sorting & layout:
+- Gemini tự sắp xếp sản phẩm: ưu tiên items có `price` (giảm dần) rồi theo `title` alphanumeric nếu tie. Nhưng khi render UI, hiển thị nút “Sắp xếp: Giá thấp → cao / Giá cao → thấp / Mới nhất” (client-side sort).
+- Tự tạo section “Sản phẩm nổi bật” (top 4 after sorting) hiển thị lớn hơn (card lớn + badge “Nổi bật”).
+
+5. Accessibility & SEO for products:
+- Each product card: `<figure><img alt=...><figcaption>...</figcaption></figure>`.
+- Buttons have aria-labels, lightbox has role="dialog" and aria-modal="true".
+- Product links are internal anchors if `page` present. If `page` empty, button triggers contact modal.
+
+6. Fallbacks & placeholders:
+- Nếu image fetch lỗi, show inline SVG placeholder (camera icon) with background.
+- Nếu product `price` missing, show “Giá liên hệ”.
+- If PRODUCT_ITEMS too big (>12) only render first 12 and include console.warn in JS.
+
+7. Integration with existing site features (keep previous prompt constraints):
+- Keep Topbar, Hero (Travel Mini-App), Chat bubble (Messenger-like), Quick-Call, Footer (4 columns with backlinks), Icons mapping, no use of words “ạ/nhé/nha”.
+- Chat replies can include product suggestions: when user asks for a model (e.g., “Wave”) bot should search PRODUCT_ITEMS for matches and reply with product card(s) (thumbnail + price + “Gọi/Zalo” CTA) **but must NOT auto-redirect**. This uses client-side match by title/desc.
+- Provide small UI control in chat to “Gửi ảnh sản phẩm vào chat” (inserts thumbnail + link to lightbox).
+
+8. Performance & bundle:
+- Keep CSS minimal and inline; images lazy; do not load excessive fonts sizes. Use media queries and prefers-reduced-motion respect.
+- JS must be vanilla, minimal, and safely handle missing PRODUCT_ITEMS, LOGO_URL.
+
+9. Developer handoff:
+- At top of HTML include a short JSON comment (only inside HTML comment) summarizing `PRODUCT_ITEMS` count and which files to create (menu pages). Example:
+  `<!-- GENERATED: products=6 | pages: trangchu.html, gioithieu.html, dichvu.html, banggia.html, ... -->`
+
+10. Output requirement:
+- Trả về **CHỈ** 1 file `index.html`.
+- Thay chính xác các biến `TITLE`, `DESCRIPTION`, `PHONE`, `ZALO`, `MAP`, `LOGO_URL`, `PRODUCT_ITEMS` vào file (để dễ deploy).
+- Ngôn ngữ tiếng Việt, không có “ạ/nhé/nha”.
+- Không thêm giải thích ngoài file.
+
+KẾT THÚC.
