@@ -1,0 +1,75 @@
+TITLE="[TITLE]"
+DESCRIPTION="[DESCRIPTION]"
+PHONE="[PHONE]"
+ZALO="[ZALO_URL]"   // empty "" if none
+MAP="[MAP_URL]"     // optional, empty "" if none
+
+You are an expert Apple-style front-end UI/UX engineer. Produce ONE complete file `index.html` (HTML+inline CSS+inline JS). No jQuery/Bootstrap. Output ONLY the HTML file (start `<!doctype html>` end `</html>`). Use Inter (Google Fonts), Font Awesome 6, and Material Symbols Rounded (variable). Place JS at the end of `</body>` and use `defer`.
+
+Hard requirements (must satisfy all):
+
+HEAD & SEO
+- Include: meta charset, viewport, color-scheme, theme-color (light/dark), canonical, robots.
+- Full Open Graph + Twitter card.
+- JSON-LD: WebSite + Organization (name = TITLE).
+- Preconnect/preload fonts. Keep CSS compact in `<style>` using `:root` variables.
+
+ICON SYSTEM
+- Load Material Symbols Rounded (variable) + Font Awesome 6 Free.
+- Provide utilities `.ms` (Material Symbols) and `.fa` (Font Awesome): `inline-flex`, `currentColor`, `line-height:1`.
+- Sizes: `.i-16`, `.i-20`, `.i-24`.
+- All icons `aria-hidden="true"`. Accompanying visible text has `<span class="sr">` (visually-hidden).
+- Provide inline SVG fallback icon for Zalo as `.ico-zalo`.
+- Mandatory icon mapping: topbar (menu, close, home, info, phone), hero chips (location_on, calendar_month, sell, auto_awesome), travel inputs (location, calendar, price), CTA (call, zalo/fa-comments, mail, pin_drop), chat (chat/support_agent/send/delete/close), quick-call (call/fa-comments/map), footer (arrow_upward/help_center/policy/gavel/shield_lock).
+
+NAV + TOPBAR + HERO
+- Topbar: blurred backdrop (`backdrop-filter`), sticky, shrink-on-scroll; mobile drawer with proper aria attributes.
+- Menu links ready: `trangchu.html`, `gioithieu.html`, `dichvu.html`, `banggia.html`, `thutuc.html`, `lienhe.html`.
+- Hero: "Travel Mini-App" with horizontal chips + small form (destination, days, budget). Each input has icon prefix.
+- "Gợi ý lịch trình" button: generates 1–3 rule-based itinerary suggestions client-side (no external API). Show suggestions in UI and include CTA options (Gọi/Zalo/Email using PHONE/ZALO). Do not use the words “ạ”, “nhé”, “nha”.
+
+CHAT (Messenger-like)
+- Floating round bubble bottom-right opens chat dialog (header gradient, avatar icon).
+- Bot is rule-based, handles intents: `giá`, `lịch trình`, `liên hệ`. Replies in Vietnamese only, natural tone, **never** include “ạ/nhé/nha”.
+- Chat must not auto-open external links or call `window.open`. Link text may be shown but clicking should not auto-nav; if link is provided, open only by explicit user action.
+- Avoid overlapping quick-call/footer: compute bottom offset using `visualViewport` + `env(safe-area-inset-bottom)`.
+- **Do not call** `input.focus()` on open for iOS.
+
+QUICK-CALL (Mobile safe)
+- Fixed bottom bar with `id="quick-call"` and `role="navigation"`. Three buttons ≥48px: Call (`tel:PHONE`), Zalo (`ZALO`), Map (`MAP` if provided).
+- quick-call z-index lower than chat; chat repositions above when quick-call visible.
+- Detect keyboard via `visualViewport.height` and auto-hide/show quick-call accordingly.
+- Provide CSS var `--qc-height` and ensure page content uses `padding-bottom: calc(env(safe-area-inset-bottom) + var(--qc-height, 64px))`.
+
+FOOTER
+- 2–3 columns:
+  (a) About: TITLE + short DESCRIPTION,
+  (b) Contact: tel:PHONE, ZALO link, email placeholder, opening hours placeholder, address placeholder,
+  (c) Support: FAQ / Chính sách thuê / Điều khoản / Bảo mật (use `#` if missing).
+- Copyright: `© <span id="y"></span> TITLE` (JS sets year).
+- “Back to top” link with `arrow_upward` icon.
+- Avoid duplicating quick-call actions inside footer.
+
+JS BEHAVIOR & STORAGE
+- All JS inside an IIFE. Inject UI on DOM ready. CSS in HEAD.
+- Simulate typing delays (≈ 1–3s) to feel natural.
+- Store session locally in `localStorage` up to 200 messages.
+- Expose `window.MotoAI` API: `open()`, `close()`, `clear()`, `learnNow()` (learnNow may be noop).
+- No network learning or external crawling — suggestions must be rule-based.
+- Keep animations simple (opacity/transform) to avoid layout shifts and ensure 60fps where possible.
+
+A11Y & PERFORMANCE
+- Use proper `role`/`aria-*` for dialog, toolbar, navigation, buttons.
+- Buttons handle click/touch/pointer events robustly (no stuck overlays on iOS Safari).
+- Minimize layout thrashing; avoid heavy DOM reflows.
+
+LANGUAGE
+- All UI text in Vietnamese only.
+- **Absolutely forbid** "ạ", "nhé", "nha" anywhere.
+- Tone: natural, friendly, professional.
+
+DELIVERABLE
+- Output exactly one `index.html`. Insert TITLE, DESCRIPTION, PHONE, ZALO, MAP properly in meta, hero, CTAs, chat, quick-call, footer.
+- No extra commentary outside the HTML file.
+
+End of prompt.
