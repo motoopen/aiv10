@@ -1,54 +1,73 @@
-PROMPT CHO GEMINI (bản đầy đủ có icon nâng cao)
+TITLE="[TITLE]"
+DESCRIPTION="[DESCRIPTION]"
+PHONE="[PHONE]"
+ZALO="[ZALO_URL]"        // nếu không có để rỗng ""
+MAP="[MAP_URL]"          // optional, nếu không có để rỗng ""
 
-Bạn là chuyên gia front-end UI/UX phong cách Apple. Dựa trên 4 biến:
-TITLE="[TITLE]";
-DESCRIPTION="[DESCRIPTION]";
-PHONE="[PHONE]";
-ZALO="[ZALO_URL]"; // MAP có thể trống hoặc là 1 URL Google Maps nếu có
+Bạn là chuyên gia front-end UI/UX phong cách Apple. Dựa trên 4 biến trên, xuất **MỘT FILE index.html** hoàn chỉnh (HTML + CSS + JS nội tuyến). **Không dùng jQuery/Bootstrap**. Font: Inter (Google Fonts) + Font Awesome 6 + Material Symbols Rounded (variable). JS đặt **CUỐI </body>** và dùng `defer`. 
 
+Yêu cầu chi tiết (bắt buộc):
+1. HEAD chuẩn SEO + PWA
+   - meta charset, viewport, theme-color cho light/dark, color-scheme, canonical, robots.
+   - Open Graph + Twitter card đầy đủ.
+   - JSON-LD: WebSite + Organization (name = TITLE).
+   - Preconnect / preload fonts; CSS gọn trong <style> với biến :root.
 
-Xuất ra MỘT FILE index.html duy nhất (HTML + CSS + JS nội tuyến). Không jQuery/Bootstrap.
-Font: Inter (Google Fonts) + Font Awesome 6 và Material Symbols Rounded (variable) để có icon nâng cao. JS đặt cuối </body> (defer). 
+2. ICON NÂNG CAO
+   - Tải Material Symbols Rounded (variable) và Font Awesome 6 Free.
+   - Tạo utility classes `.ms` (Material Symbols) và `.fa` (Font Awesome) kế thừa `currentColor`, inline-flex, line-height:1.
+   - Kích thước sẵn: `.i-16`, `.i-20`, `.i-24`.
+   - Tất cả icon `aria-hidden="true"`. Văn bản kèm icon có `<span class="sr">` để a11y.
+   - Mapping icon bắt buộc (ví dụ): topbar menu/close/home/info/phone; hero chips: location_on/calendar_month/sell/auto_awesome; travel fields: location/calendar/price; CTA: call / Zalo (fa-comments/fa-rocketchat + chữ "Zalo") / mail / pin_drop; chat: chat/support_agent/send/delete/close; quick-call: call/fa-comments/map; footer: arrow_upward/help_center/policy/gavel/shield_lock.
+   - Chèn SVG mini Zalo inline và class `.ico-zalo` để fallback khi cần.
 
-1) HEAD chuẩn SEO + PWA
-	•	meta charset, viewport, theme-color (light/dark), color-scheme, canonical, robots.
-	•	Open Graph + Twitter đầy đủ, JSON-LD WebSite + Organization (name = TITLE).
-	•	Preconnect + preload fonts. CSS trong <style> gọn, có biến :root.
+3. Topbar & Hero (Apple-style)
+   - Topbar kính mờ (backdrop-filter), sticky, shrink on scroll; mobile drawer với aria-* chuẩn.
+   - Menu phải có link chờ sẵn: `trangchu.html`, `gioithieu.html`, `dichvu.html`, `banggia.html`, `thutuc.html`, `lienhe.html`.
+   - Hero chứa "Travel Mini-App": chips kéo ngang (địa điểm, số ngày, ngân sách), form nhỏ (input: điểm đến, số ngày, ngân sách) — mỗi input có icon.
+   - Nút “Gợi ý lịch trình” tạo 1–3 gợi ý rule-based (no external API) dựa trên input, hiển thị kết quả trong UI + hiển thị CTA Gọi / Zalo / Email (lấy PHONE/ZALO). **Không** dùng từ “ạ/nhé/nha”.
 
-2) Hệ thống ICON NÂNG CAO (bắt buộc)
-	•	Tải cả 2:
-	•	Material Symbols Rounded (variable) từ Google Fonts (dùng cho control/UI: menu, close, send, chat, map, call, schedule, price, scooter, etc).
-	•	Font Awesome 6 Free (dùng cho brand/social + fallback).
-	•	Tiêu chuẩn hiển thị icon:
-	•	Tạo utility .ms (Material Symbols) và .fa (Font Awesome) kế thừa currentColor, inline-flex, căn giữa, font-size tương đối.
-	•	Tạo cỡ sẵn: .i-16, .i-20, .i-24 (16/20/24px).
-	•	Tối ưu cân dòng: line-height:1, không lệch baseline.
-	•	Tất cả icon đều có aria-hidden="true"; văn bản kèm icon có <span class="sr"> (visually-hidden) cho a11y.
-	•	Mapping bắt buộc dùng icon:
-	•	Topbar: menu (menu), close (close), home (home), info (info), phone (call).
-	•	Hero chips: địa điểm (location_on), số ngày (calendar_month), ngân sách (sell), gợi ý (auto_awesome).
-	•	Travel mini-app fields: trước mỗi input có icon tương ứng (location, calendar, price).
-	•	CTA: Gọi (call), Zalo (FA: fa-brands fa-rocketchat hoặc fa-comments + chữ “Zalo”), Email (mail), Map (pin_drop).
-	•	Chat: bubble button (chat), header avatar (support_agent), send (send), clear (delete), close (close).
-	•	Quick-Call bar: call (call), Zalo (fa-comments), map (map/pin_drop).
-	•	Footer: mũi tên “lên đầu trang” (arrow_upward), các mục: FAQ (help_center), policy (policy), terms (gavel), privacy (shield_lock).
-	•	Zalo icon tuỳ biến: Nếu cần, chèn SVG mini “Zalo” inline (1 path) và dùng class .ico-zalo làm fallback khi FA không có.
+4. Chat bubble kiểu Messenger
+   - Nút tròn ở góc phải dưới mở dialog chat; dialog có header gradient, avatar icon, close, clear.
+   - Bot rule-based: xử lý intent `giá`, `lịch trình`, `liên hệ` và trả lời lịch sự, thuần tiếng Việt (KHÔNG chứa “ạ/nhé/nha”), không tự mở link.
+   - Chat tránh chồng lấn quick-call/footer: tính bottom offset theo `visualViewport` + `env(safe-area-inset-bottom)`.
+   - **Không auto-focus** input trên iOS (không gọi `input.focus()` khi mở để tránh bật bàn phím iOS).
 
-3) Topbar & Hero (Apple-style)
-	•	Topbar kính mờ (backdrop-filter), sticky, thu nhỏ khi scroll; drawer mobile có aria-* đầy đủ.
-	•	Hero có Travel Mini-App: chips kéo ngang + form nhỏ (điểm đến, số ngày, ngân sách).
-	•	Nút “Gợi ý lịch trình” sinh 1–3 gợi ý rule-based (không gọi API), kèm CTA Gọi/Zalo/Email (lấy từ PHONE/ZALO).
+5. QUICK-CALL (mobile, an toàn)
+   - Thanh cố định đáy mobile với id="quick-call", role="navigation", chứa 3 nút ≥48px: “Gọi” (tel:PHONE), “Zalo” (ZALO), “Bản đồ” (MAP nếu MAP không rỗng).
+   - Z-index thấp hơn chat; chat sẽ tự dời lên khi quick-call xuất hiện.
+   - Tự ẩn khi bàn phím iOS hiện (phát hiện qua `visualViewport.height` giảm) và tự hiện lại khi đóng.
+   - CSS var: `--qc-height` và body/content có `padding-bottom: calc(env(safe-area-inset-bottom) + var(--qc-height, 64px))`.
 
-4) Chat bubble kiểu Messenger
-	•	Nút tròn góc phải dưới mở dialog chat (header gradient), log bong bóng.
-	•	Bot rule-based: hiểu intent giá / lịch trình / liên hệ; KHÔNG tự mở link ra ngoài.
-	•	Né chồng lấn quick-call/footer: tính bottom offset theo visualViewport + env(safe-area-inset-bottom).
-	•	Không auto-focus input trên iOS để tránh bật bàn phím.
+6. FOOTER
+   - 2–3 cột: 
+     (a) Về chúng tôi: TITLE + short DESCRIPTION,
+     (b) Liên hệ: tel:PHONE, ZALO link, email placeholder, giờ mở cửa mẫu, địa chỉ placeholder,
+     (c) Hỗ trợ: FAQ / Chính sách thuê / Điều khoản / Bảo mật (dùng `#` nếu chưa có).
+   - Dòng bản quyền: `© <span id="y"></span> TITLE` (JS tự cập nhật năm).
+   - Link “Lên đầu trang” có icon arrow_upward.
+   - Không trùng lặp chức năng với quick-call.
 
-5) QUICK-CALL (mobile, an toàn với chat)
-	•	Thanh cố định đáy màn hình MOBILE: 3 nút ≥48px: “Gọi” (tel:PHONE), “Zalo” (ZALO), “Bản đồ” (MAP nếu có).
-	•	id="quick-call", role="navigation", contrast cao, z-index thấp hơn chat.
-	•	Tự ẩn khi bàn phím iOS hiện, tự hiện lại khi đóng.
-	•	Biến CSS: --qc-height và dùng padding-bottom: calc(env(safe-area-inset-bottom) + var(--qc-height, 64px)) để nội dung không bị che.
+7. A11y + hiệu năng
+   - Sử dụng `role`/`aria-*` cho dialog/chat/toolbar, button; close xử lý click/touch/pointer và không kẹt overlay trên Safari iPhone.
+   - Hiệu ứng nhẹ (opacity/transform) tránh layout shift; đảm bảo 60fps cho animations.
+   - HTML semantic, CSS biến :root (--accent, --bg, --text, --qc-height), JS đóng gói trong IIFE.
 
-  
+8. Hành vi JS
+   - Inject UI khi DOM ready; CSS được thêm trong HEAD; JS cuối body.
+   - Auto-learn **không** cần — Gemini không gọi API hay thu thập; rule-based suggestions only.
+   - Các link external chỉ hiển thị trong chat/response text — **KHÔNG** tự redirect hoặc window.open từ bot.
+   - Thời gian chờ trả lời chat: simulate typing delay ~ 1000–3000ms.
+   - Lưu session đơn giản bằng localStorage (không gửi lên server); tối đa lưu 200 messages.
+   - Expose public API `window.MotoAI` với methods: `open()`, `close()`, `clear()`, `learnNow()` (learnNow có thể noop).
+
+9. Nội dung ngôn ngữ
+   - Toàn bộ UI/TEXT tiếng Việt.
+   - **Tuyệt đối không** xuất hiện các hạt từ “ạ”, “nhé”, “nha”.
+   - Giọng tự nhiên, lịch sự, chuyên nghiệp.
+
+10. Bàn giao
+   - Xuất **DUY NHẤT** một file `index.html`. Trong file, chèn `TITLE`, `DESCRIPTION`, `PHONE`, `ZALO`, `MAP` vào tất cả chỗ cần (meta, hero, CTA, chat, quick-call, footer).
+   - Đảm bảo kích thước file hợp lý, CSS gọn, không chồng chéo meta tags.
+
+KẾT: Trả về **chỉ** nội dung file `index.html` (bắt đầu từ `<!doctype html>` đến `</html>`). Không thêm chú thích, giải thích hay văn bản nào khác.
