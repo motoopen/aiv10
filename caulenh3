@@ -1,0 +1,85 @@
+TITLE="[TITLE]"
+DESCRIPTION="[DESCRIPTION]"
+PHONE="[PHONE]"
+ZALO="[ZALO_URL]"   // "" nếu không có
+MAP="[MAP_URL]"     // "" nếu không có
+
+Bạn là chuyên gia front-end UI/UX phong cách Apple. Hãy xuất **DUY NHẤT** một file hoàn chỉnh `index.html` (HTML + CSS nội tuyến + JS nội tuyến ở cuối `</body>`; không jQuery/Bootstrap). Dùng font Inter (Google Fonts), Material Symbols Rounded (variable) và Font Awesome 6. JS phải nằm cuối `</body>` và dùng IIFE. Không có văn bản ngoài file HTML.
+
+**YÊU CẦU CHUNG (bắt buộc)**
+- Ngôn ngữ giao diện: tiếng Việt (không dùng “ạ”, “nhé”, “nha”).
+- HEAD chuẩn SEO/PWA: charset, viewport, color-scheme, theme-color (light/dark), canonical, robots, OpenGraph + Twitter, JSON-LD (WebSite + Organization với name = TITLE). Preconnect/preload fonts.
+- CSS gọn trong `<style>` dùng biến `:root` (ví dụ: --accent, --bg, --text, --qc-height).
+- Hệ thống icon: load Material Symbols Rounded + Font Awesome. Tạo utility `.ms` và `.fa` (inline-flex, currentColor, line-height:1) và kích cỡ `.i-16`, `.i-20`, `.i-24`. Tất cả icon `aria-hidden="true"`. Thêm inline SVG fallback cho Zalo `.ico-zalo`.
+- JS behavior: localStorage session (tối đa 200 tin nhắn), typing delay tự nhiên (≈1–3s), expose `window.MotoAI` API: `open()`, `close()`, `clear()`, `learnNow()` (learnNow có thể noop). Không crawl hay gọi API mạng để sinh nội dung — mọi gợi ý phải rule-based.
+- A11y: proper `role`/`aria-*` cho dialog/chat/toolbar/navigation; nút xử lý click/touch/pointer an toàn (không kẹt overlay trên iOS Safari).
+- Hiệu năng: animation nhẹ (opacity/transform), tránh layout shift.
+
+**MENU (bắt buộc, tạo các link chờ sẵn)**
+Tạo menu / navbar (desktop + drawer mobile) với các link dưới (tạo link chờ sẵn, không cần tạo nội dung các trang):
+- `trangchu.html` (Index)
+- `gioithieu.html`
+- `dichvu.html` (parent)
+  - `banggia.html`
+  - `kinhnghiem.html`
+  - `huongdan.html`
+  - `diadiem.html`
+  - `chiase.html`
+  - `uudai.html`
+- `faq.html`
+- `lienhe.html`
+- `chinhsach.html`
+- `baomat.html`
+
+Menu phải hiển thị các mục con của `dichvu.html` dưới dạng dropdown trên desktop & nested items trong drawer trên mobile. Các link trong menu là chính xác theo đường dẫn file ở trên để anh tiện tạo file tương ứng sau này.
+
+**HERO — Travel Mini-App**
+- Hero Apple-style, chips kéo ngang (địa điểm, số ngày, ngân sách, gợi ý).
+- Form nhỏ: destination (icon location), days (icon calendar), budget (icon price). Input có icon tiền tố.
+- Button “Gợi ý lịch trình” tạo 1–3 itinerary rule-based (client-side), hiển thị kết quả trong UI (không gọi API). Mỗi gợi ý kèm CTA: Gọi (tel:PHONE), Zalo (ZALO), Email (mailto:).
+- Không auto-focus trên iOS.
+
+**CHAT (Messenger-like)**
+- Floating bubble góc phải mở dialog chat (header gradient + avatar icon).
+- Bot rule-based: nhận intent `giá`, `lịch trình`, `liên hệ`. Trả lời tự nhiên, VN-only, **không** dùng “ạ/nhé/nha”.
+- Chat không tự điều hướng ra link ngoài; hiển thị link chỉ khi user click rõ ràng.
+- Né chồng lấn quick-call/footer bằng cách tính bottom offset: `visualViewport.height` + `env(safe-area-inset-bottom)` + `--qc-height`.
+- Không gọi `input.focus()` khi mở để tránh bật bàn phím iOS.
+
+**QUICK-CALL (mobile, an toàn)**
+- Thanh cố định đáy với `id="quick-call"` và `role="navigation"`. 3 nút ≥48px:
+  - Gọi: `tel:PHONE`
+  - Zalo: `ZALO` (mở external only when user taps)
+  - Bản đồ: `MAP` (nếu MAP="" thì ẩn nút)
+- Quick-call z-index thấp hơn chat; chat sẽ tự dịch lên khi quick-call hiện.
+- Tự ẩn khi bàn phím (detect via `visualViewport.height` drop) và hiện lại khi keyboard đóng.
+- Page content padding-bottom dùng `calc(env(safe-area-inset-bottom) + var(--qc-height, 64px))`.
+
+**FOOTER (4 cột, backlink cho menu, tối ưu SEO)**
+Footer chia **4 cột**:
+1. About: `TITLE` + short `DESCRIPTION`.
+2. Dịch vụ (liên kết): link tới `dichvu.html` và tất cả các trang con (`banggia.html`, `kinhnghiem.html`, `huongdan.html`, `diadiem.html`, `chiase.html`, `uudai.html`).
+3. Hỗ trợ: `faq.html`, `chinhsach.html`, `baomat.html`, `terms` (nếu chưa có thì `#`).
+4. Liên hệ: tel:PHONE (tel:), Zalo (link), email placeholder (mailto:), giờ mở cửa (placeholder), địa chỉ (placeholder).
+- Dòng bản quyền: `© <span id="y"></span> TITLE` (JS set year).
+- “Lên đầu trang” link kèm icon `arrow_upward`.
+- Footer phải cung cấp backlinks nội bộ (anchor links) đến từng file menu để hỗ trợ SEO / internal linking.
+
+**ICON MAPPING (bắt buộc sử dụng các icon cụ thể)**
+- Topbar: menu (menu), close (close), home (home), info (info), phone (call).
+- Hero chips / inputs: location_on, calendar_month, sell, auto_awesome.
+- CTA: call, fa-comments (Zalo), mail, pin_drop.
+- Chat: chat, support_agent, send, delete, close.
+- Quick-call: call, fa-comments, map/pin_drop.
+- Footer: arrow_upward, help_center, policy, gavel, shield_lock.
+- Nếu FA không có Zalo, dùng inline SVG `.ico-zalo` fallback.
+
+**GIAO HÀNG**
+- Trả về **CHỈ** 1 file `index.html` hoàn chỉnh, sẵn deploy. Không giải thích thêm, không comment ngoài file.
+- Thay thế chính xác `TITLE`, `DESCRIPTION`, `PHONE`, `ZALO`, `MAP` vào metadata, hero, CTA, chat, quick-call, footer.
+
+**LƯU Ý NGÔN NGỮ**
+- Tuyệt đối không xuất hiện các từ “ạ”, “nhé”, “nha”.
+- Giọng tự nhiên, thân thiện, chuyên nghiệp.
+
+KẾT THÚC.
